@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PSY-FI — Microdose Gummy</title>
+  <link rel="icon" type="image/png" href="https://z-cdn-media.chatglm.cn/files/bca6d2d1-0a8f-40f7-ad3e-d00894a597d7.png?auth_key=1879125189-f2c9c18eca664e96bc0b6226c2cba93c-0-3036c8fed5dc05dd5a16d737ed0a5f6b" sizes="32x32">
+  <link rel="icon" type="image/png" href="https://z-cdn-media.chatglm.cn/files/bca6d2d1-0a8f-40f7-ad3e-d00894a597d7.png?auth_key=1879125189-f2c9c18eca664e96bc0b6226c2cba93c-0-3036c8fed5dc05dd5a16d737ed0a5f6b" sizes="16x16">
+  <link rel="apple-touch-icon" href="https://z-cdn-media.chatglm.cn/files/bca6d2d1-0a8f-40f7-ad3e-d00894a597d7.png?auth_key=1879125189-f2c9c18eca664e96bc0b6226c2cba93c-0-3036c8fed5dc05dd5a16d737ed0a5f6b">
+  <link rel="shortcut icon" href="https://z-cdn-media.chatglm.cn/files/bca6d2d1-0a8f-40f7-ad3e-d00894a597d7.png?auth_key=1879125189-f2c9c18eca664e96bc0b6226c2cba93c-0-3036c8fed5dc05dd5a16d737ed0a5f6b">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Knewave&family=Nerko+One&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+            geist: ['Geist', 'sans-serif'],
+            knewave: ['Knewave', 'cursive'],
+            nerko: ['Nerko One', 'cursive'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #fff; overflow-x: hidden; }
+
+    @keyframes animationIn {
+      0% { opacity: 0; transform: translateY(30px); filter: blur(8px); }
+      100% { opacity: 1; transform: translateY(0); filter: blur(0px); }
+    }
+    .anim-in { animation: animationIn 0.8s ease-out both; }
+    .anim-d1 { animation-delay: 0.1s; }
+    .anim-d2 { animation-delay: 0.2s; }
+    .anim-d3 { animation-delay: 0.3s; }
+    .anim-d4 { animation-delay: 0.4s; }
+    .anim-d5 { animation-delay: 0.5s; }
+    .anim-d6 { animation-delay: 0.6s; }
+    .anim-d7 { animation-delay: 0.7s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(2deg); }
+    }
+    .float-slow { animation: float 6s ease-in-out infinite; }
+    .float-med { animation: float 4s ease-in-out infinite 1s; }
+    .float-fast { animation: float 3s ease-in-out infinite 0.5s; }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.05); }
+    }
+
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #06b6d4, #fb923c, #fbbf24, #06b6d4);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 6s ease infinite;
+    }
+
+    @property --gradient-angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+    .glow-btn { position: relative; z-index: 1; }
+    .glow-btn::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: inherit;
+      background: conic-gradient(from var(--gradient-angle), transparent 0%, #06b6d4 5%, #fb923c 15%, #06b6d4 30%, transparent 40%);
+      animation: border-spin 2.5s linear infinite;
+      z-index: -1;
+    }
+    .glow-btn::after {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background: #0a0a0a;
+      z-index: -1;
+    }
+    @keyframes border-spin { to { --gradient-angle: 360deg; } }
+
+    .hero-glow {
+      position: absolute;
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    .card-hover { transition: all 0.4s cubic-bezier(0.33, 1, 0.68, 1); }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,0.2);
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.33, 1, 0.68, 1), transform 0.8s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+    .scroll-reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      will-change: transform;
+      animation: marquee 30s linear infinite;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+    .nav-blur { backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #171717;
+      border: 1px solid rgba(6,182,212,0.3);
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      z-index: 9999;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .logo-img { height: 44px; width: auto; object-fit: contain; }
+    .logo-img-footer { height: 36px; width: auto; object-fit: contain; }
+
+    .photo-frame {
+      position: relative;
+      border-radius: 1.5rem;
+      overflow: hidden;
+    }
+    .photo-frame::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 1.5rem;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(6,182,212,0.3), rgba(251,146,60,0.3), rgba(251,191,36,0.2));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.4s ease;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+      padding-top: 12px;
+    }
+    .faq-item.open .faq-chevron {
+      transform: rotate(180deg);
+    }
+    .faq-chevron {
+      transition: transform 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast font-inter text-sm text-emerald-400 flex items-center gap-2">
+    <iconify-icon icon="mdi:check-circle" width="20"></iconify-icon>
+    <span id="toast-msg">Added to waitlist!</span>
+  </div>
+
+  <!-- NAV -->
+  <nav class="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-3xl">
+    <div class="nav-blur bg-[rgba(10,10,10,0.7)] border border-white/10 rounded-full px-2 py-1.5 flex items-center justify-between shadow-lg">
+      <a href="#" class="flex items-center gap-2 pl-3">
+        <img src="https://z-cdn-media.chatglm.cn/files/bca6d2d1-0a8f-40f7-ad3e-d00894a597d7.png?auth_key=1879125189-f2c9c18eca664e96bc0b6226c2cba93c-0-3036c8fed5dc05dd5a16d737ed0a5f6b" alt="PSY-FI Logo" class="logo-img"/>
+        <span style="font-family: 'Knewave', cursive;" class="font-medium text-2xl tracking-wide">PSY-FI</span>
+      </a>
+      <div class="hidden md:flex items-center gap-6">
+        <a href="#benefits" class="text-neutral-400 hover:text-white text-sm transition-colors duration-200">Benefits</a>
+        <a href="#product" class="text-neutral-400 hover:text-white text-sm transition-colors duration-200">Product</a>
+        <a href="#science" class="text-neutral-400 hover:text-white text-sm transition-colors duration-200">Science</a>
+        <a href="#faq" class="text-neutral-400 hover:text-white text-sm transition-colors duration-200">FAQ</a>
+      </div>
+      <button onclick="showToast('You are on the list! We will notify you at launch.')" class="bg-white text-black text-sm font-medium px-5 py-2 rounded-full hover:bg-neutral-200 transition-all duration-150 active:scale-95 shrink-0">Get Early Access</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <div class="hero-glow bg-cyan-300" style="top:-200px;left:-200px;animation:pulse-glow 5s ease-in-out infinite;opacity:0.12;"></div>
+    <div class="hero-glow bg-orange-300" style="bottom:-200px;right:-200px;animation:pulse-glow 6s ease-in-out infinite 2s;opacity:0.12;"></div>
+    <div class="hero-glow bg-amber-500" style="top:30%;right:10%;width:400px;height:400px;animation:pulse-glow 7s ease-in-out infinite 1s;"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-20 flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+      <div class="flex-1 text-center lg:text-left">
+        <div class="anim-in anim-d1 inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-8">
+          <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
+          <span class="text-xs font-medium text-neutral-400 tracking-wider uppercase">Now Available</span>
+        </div>
+        <h1 class="anim-in anim-d2 font-knewave text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[1.05] mb-6">
+          Unlock Your<br><span class="gradient-text font-nerko">Inner Mycelium</span>
+        </h1>
+        <p class="anim-in anim-d3 text-lg text-neutral-400 leading-relaxed max-w-xl mx-auto lg:mx-0 mb-10">
+          Precision-crafted microdose gummies inspired by nature's neural networks. Sharpen focus, elevate mood, and expand creativity — one subtle dose at a time.
+        </p>
+        <div class="anim-in anim-d4 flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+          <button onclick="showToast('Added to waitlist! Check your email.')" class="glow-btn rounded-full px-8 py-4 text-lg font-medium text-white hover:scale-105 transition-transform duration-200 active:scale-95">
+            Try PSY-FI →
+          </button>
+          <a href="#science" class="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors duration-200 group">
+            <span class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-white/40 transition-colors">
+              <iconify-icon icon="mdi:play" width="18" class="ml-0.5"></iconify-icon>
+            </span>
+            <span class="text-sm font-medium">How it works</span>
+          </a>
+        </div>
+        <div class="anim-in anim-d5 flex items-center gap-6 mt-10 justify-center lg:justify-start">
+          <div class="flex -space-x-2">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-cyan-600 border-2 border-[#0a0a0a]"></div>
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 border-2 border-[#0a0a0a]"></div>
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 border-2 border-[#0a0a0a]"></div>
+          </div>
+          <p class="text-sm text-neutral-500"><span class="text-white font-medium">2,400+</span> on the waitlist</p>
+        </div>
+      </div>
+
+      <div class="flex-1 relative flex justify-center">
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div class="w-[400px] h-[400px] rounded-full bg-purple-500/10 blur-[100px]"></div>
+        </div>
+        <div class="float-slow relative">
+          <img src="./PSY FI - Hero - Package.png" alt="PSY-FI Microdose Gummy Packaging" class="w-[500px] md:w-[656px] lg:w-[750px] object-contain drop-shadow-2xl"/>
+          <div class="absolute top-10 -left-6 w-3 h-3 bg-emerald-400/60 rounded-full float-fast"></div>
+          <div class="absolute top-1/3 -right-4 w-2 h-2 bg-purple-400/60 rounded-full float-med"></div>
+          <div class="absolute bottom-20 left-0 w-2.5 h-2.5 bg-amber-400/60 rounded-full float-slow"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 anim-in anim-d7">
+      <div class="w-6 h-10 border border-white/20 rounded-full flex items-start justify-center p-1.5">
+        <div class="w-1 h-2 bg-white/60 rounded-full animate-bounce"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE — inline overflow:hidden as safety net -->
+  <section class="border-y border-white/5 py-5" style="background:rgba(23,23,23,0.3);overflow:hidden;contain:content;">
+    <div class="marquee-track">
+      <div class="flex items-center gap-12 px-6 whitespace-nowrap">
+        <span class="text-neutral-500 text-sm font-medium tracking-wider uppercase">🍄 Clarity</span>
+        <span class="text-neutral-700">✦</span>
+        <span class="text-neutral-500 text-sm font-medium tracking-wider uppercase">🌿 Focus</span>
+        <span class="text-neutral-700">✦</span>
+        <span class="text-neutral-500 text-sm font-medium tracking-wider uppercase">🍄 Mood</span>
+        <span class="text-neutral-700">✦</span>
+        <span class="text-neutral-500 text-sm font-medium tracking-wider uppercase">🌿 Happiness</span>
+        <span class="text-neutral-700">✦</span>
+        <span class="text-neutral-500 text-sm font-medium tracking-wider uppercase">🍄 Calm</span>
+        <span class="text-neutral-700">✦</span>
+        <span class="text-neutral-500 text-sm font-medium tracking-wider uppercase">🌿 Energy</span>
+        <span class="text-neutral-700">✦</span>
+      </div>
+      <div class="flex items-center gap-12 px-6 whitespace-nowrap">
+        <span class="text-neutral-500 text-sm font-medium tracking-wider uppercase">🍄 Clarity</span>
+        <span class="text-neutral-700">✦</span>
+        <span class="text-neutral-500 text-sm font-medium tracking-wider uppercase">🌿 Focus</span>
+        <span class="text-neutral-700">✦</span>
+        <span class="text-neutral-500 text-sm font-medium tracking-wider uppercase">🍄 Mood</span>
+        <span class="text-neutral-700">✦</span>
+        <span class="text-neutral-500 text-sm font-medium tracking-wider uppercase">🌿 Happiness</span>
+        <span class="text-neutral-700">✦</span>
+        <span class="text-neutral-500 text-sm font-medium tracking-wider uppercase">🍄 Calm</span>
+        <span class="text-neutral-700">✦</span>
+        <span class="text-neutral-500 text-sm font-medium tracking-wider uppercase">🌿 Energy</span>
+        <span class="text-neutral-700">✦</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFITS -->
+  <section id="benefits" class="py-24 relative">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="mb-16 scroll-reveal">
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center md:items-center gap-8 px-4">
+          <div class="md:w-1/2 w-full flex-shrink-0">
+            <img src="https://pub-2efa7a216cba4710b08ac84f7595e2ff.r2.dev/Gemini_Generated_Image_wrao0uwrao0uwrao.png" alt="Benefits visual" class="w-full h-auto rounded-2xl shadow-md" />
+          </div>
+          <div class="md:w-1/2 w-full text-center">
+            <span class="text-xs font-bold tracking-widest uppercase text-cyan-400 mb-4 block">Why Microdose</span>
+            <h2 class="font-knewave text-4xl md:text-5xl tracking-tight mb-6">Small Dose.<br><span class="text-neutral-500">Big Shift.</span></h2>
+            <p class="text-lg text-neutral-400 max-w-2xl mx-auto leading-relaxed">Sub-perceptual doses work with your brain's natural pathways — no hallucinations, just clarity.</p>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="scroll-reveal card-hover bg-[#171717]/60 border border-white/5 rounded-2xl p-8 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl group-hover:bg-cyan-500/10 transition-all duration-500"></div>
+          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-6"><iconify-icon icon="mdi:brain" width="24" class="text-cyan-400"></iconify-icon></div>
+          <h3 class="font-nerko text-2xl mb-3">Enhanced Focus</h3>
+          <p class="text-neutral-400 text-base leading-relaxed">Stimulate neuroplasticity and enter flow states more easily. Your mind, unlocked.</p>
+        </div>
+        <div class="scroll-reveal card-hover bg-[#171717]/60 border border-white/5 rounded-2xl p-8 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 rounded-full blur-2xl group-hover:bg-orange-500/10 transition-all duration-500"></div>
+          <div class="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center mb-6"><iconify-icon icon="mdi:palette" width="24" class="text-orange-400"></iconify-icon></div>
+          <h3 class="font-nerko text-2xl mb-3">Creative Expansion</h3>
+          <p class="text-neutral-400 text-base leading-relaxed">Dissolve mental barriers and access new perspectives. Think beyond the mycelium.</p>
+        </div>
+        <div class="scroll-reveal card-hover bg-[#171717]/60 border border-white/5 rounded-2xl p-8 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-all duration-500"></div>
+          <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center mb-6"><iconify-icon icon="mdi:weather-sunny" width="24" class="text-amber-400"></iconify-icon></div>
+          <h3 class="font-nerko text-2xl mb-3">Elevated Mood</h3>
+          <p class="text-neutral-400 text-base leading-relaxed">Serotonin receptor modulation promotes emotional balance. Feel lighter, naturally.</p>
+        </div>
+        <div class="scroll-reveal card-hover bg-[#171717]/60 border border-white/5 rounded-2xl p-8 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-sky-500/5 rounded-full blur-2xl group-hover:bg-sky-500/10 transition-all duration-500"></div>
+          <div class="w-12 h-12 rounded-xl bg-sky-500/10 flex items-center justify-center mb-6"><iconify-icon icon="mdi:shield-check" width="24" class="text-sky-400"></iconify-icon></div>
+          <h3 class="font-nerko text-2xl mb-3">Non-Habit Forming</h3>
+          <p class="text-neutral-400 text-base leading-relaxed">No dependency, no withdrawal. Microdosing respects your body's natural rhythm.</p>
+        </div>
+        <div class="scroll-reveal card-hover bg-[#171717]/60 border border-white/5 rounded-2xl p-8 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-rose-500/5 rounded-full blur-2xl group-hover:bg-rose-500/10 transition-all duration-500"></div>
+          <div class="w-12 h-12 rounded-xl bg-rose-500/10 flex items-center justify-center mb-6"><iconify-icon icon="mdi:heart-pulse" width="24" class="text-rose-400"></iconify-icon></div>
+          <h3 class="font-nerko text-2xl mb-3">Reduced Anxiety</h3>
+          <p class="text-neutral-400 text-base leading-relaxed">Calm the default mode network. Less noise, more presence, deeper peace.</p>
+        </div>
+        <div class="scroll-reveal card-hover bg-[#171717]/60 border border-white/5 rounded-2xl p-8 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl group-hover:bg-indigo-500/10 transition-all duration-500"></div>
+          <div class="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center mb-6"><iconify-icon icon="mdi:lightning-bolt" width="24" class="text-indigo-400"></iconify-icon></div>
+          <h3 class="font-nerko text-2xl mb-3">Sustained Energy</h3>
+          <p class="text-neutral-400 text-base leading-relaxed">No crashes, no jitters. Adaptogenic mushrooms provide smooth, all-day vitality.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT -->
+  <section id="product" class="py-24 relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(to bottom, transparent, rgba(6,182,212,0.03), transparent);"></div>
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+      <div class="text-center mb-16 scroll-reveal">
+        <span class="text-xs font-bold tracking-widest uppercase text-orange-400 mb-4 block">The Product</span>
+        <h2 class="font-knewave text-4xl md:text-5xl tracking-tight mb-6">One Gummy.<br><span class="text-neutral-500">Infinite Possibility.</span></h2>
+        <p class="text-lg text-neutral-400 max-w-2xl mx-auto leading-relaxed">Each PSY-FI gummy is precision-dosed and formulated with a synergistic blend of functional mushrooms and botanicals.</p>
+      </div>
+
+      <div class="flex flex-col lg:flex-row items-center gap-16">
+        <div class="flex-1 scroll-reveal">
+          <div class="photo-frame">
+            <img src="./Psy-fi Jungle.png" alt="PSY-FI Gummy Product" class="w-full aspect-square object-cover rounded-2xl"/>
+          </div>
+        </div>
+
+        <div class="flex-1 space-y-8">
+          <div class="scroll-reveal flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center shrink-0 mt-1"><iconify-icon icon="mdi:flask" width="20" class="text-cyan-400"></iconify-icon></div>
+            <div>
+              <h3 class="font-nerko text-xl mb-1">Precision-Dosed</h3>
+              <p class="text-neutral-400 text-base leading-relaxed">Each gummy contains exactly 100mg of our proprietary formula — consistent, measurable, reliable.</p>
+            </div>
+          </div>
+          <div class="scroll-reveal flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center shrink-0 mt-1"><iconify-icon icon="mdi:leaf" width="20" class="text-orange-400"></iconify-icon></div>
+            <div>
+              <h3 class="font-nerko text-xl mb-1">Dual-Formula</h3>
+              <p class="text-neutral-400 text-base leading-relaxed">Our proprietary formula paired with Lion's Mane for amplified neuroplasticity and cognitive support.</p>
+            </div>
+          </div>
+          <div class="scroll-reveal flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0 mt-1"><iconify-icon icon="mdi:food-apple" width="20" class="text-amber-400"></iconify-icon></div>
+            <div>
+              <h3 class="font-nerko text-xl mb-1">Clean Ingredients</h3>
+              <p class="text-neutral-400 text-base leading-relaxed">Vegan, gluten-free, no artificial colors. Sweetened with monk fruit. Lab-tested for purity.</p>
+            </div>
+          </div>
+          <div class="scroll-reveal flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center shrink-0 mt-1"><iconify-icon icon="mdi:package-variant" width="20" class="text-cyan-400"></iconify-icon></div>
+            <div>
+              <h3 class="font-nerko text-xl mb-1">30-Day Supply</h3>
+              <p class="text-neutral-400 text-base leading-relaxed">30 gummies per pouch. Follow the Fadiman protocol — dose every 3rd day for optimal results.</p>
+            </div>
+          </div>
+
+          <div class="scroll-reveal pt-4">
+            <div class="flex items-end gap-3 mb-2">
+              <span class="font-geist text-4xl font-light">$49</span>
+              <span class="text-neutral-500 text-sm line-through mb-1">$69</span>
+              <span class="bg-cyan-500/10 text-cyan-400 text-xs font-bold px-2 py-1 rounded-full mb-1.5">LAUNCH PRICE</span>
+            </div>
+            <p class="text-neutral-500 text-sm mb-6">Free shipping · Cancel anytime · 30-day guarantee</p>
+            <button onclick="showToast('Added to cart! We will confirm your order via email.')" class="glow-btn rounded-full px-8 py-4 text-base font-medium text-white hover:scale-105 transition-transform duration-200 active:scale-95">Order Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCIENCE -->
+  <section id="science" class="py-24 relative">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-16 scroll-reveal">
+        <div class="mx-auto mb-6 w-44 md:w-56">
+          <img src="./brain.png" alt="Science visualization" class="w-full h-auto" />
+        </div>
+        <span class="text-xs font-bold tracking-widest uppercase text-amber-400 mb-4 block">The Science</span>
+        <h2 class="font-knewave text-4xl md:text-5xl tracking-tight mb-6">How PSY-FI<br><span class="text-neutral-500">Works With Your Brain</span></h2>
+        <p class="text-lg text-neutral-400 max-w-2xl mx-auto leading-relaxed">A 3-step process rooted in neuroscience. No guesswork — just elegant biology.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="scroll-reveal text-center">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 flex items-center justify-center mx-auto mb-6 border border-cyan-500/10">
+            <span class="font-geist text-2xl font-light text-cyan-400">01</span>
+          </div>
+          <h3 class="font-nerko text-2xl mb-3">Ingest</h3>
+          <p class="text-neutral-400 text-base leading-relaxed">One gummy. Sub-perceptual dose. You won't "trip" — you'll simply feel more present within 30–60 minutes.</p>
+        </div>
+        <div class="scroll-reveal text-center">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500/20 to-orange-500/5 flex items-center justify-center mx-auto mb-6 border border-orange-500/10">
+            <span class="font-geist text-2xl font-light text-orange-400">02</span>
+          </div>
+          <h3 class="font-nerko text-2xl mb-3">Activate</h3>
+          <p class="text-neutral-400 text-base leading-relaxed">Our active compound binds to 5-HT2A serotonin receptors, stimulating neuroplasticity and new neural pathway formation.</p>
+        </div>
+        <div class="scroll-reveal text-center">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 flex items-center justify-center mx-auto mb-6 border border-amber-500/10">
+            <span class="font-geist text-2xl font-light text-amber-400">03</span>
+          </div>
+          <h3 class="font-nerko text-2xl mb-3">Integrate</h3>
+          <p class="text-neutral-400 text-base leading-relaxed">Over weeks, your brain rewires. Focus sharpens, mood stabilizes, creativity flows — even on off-days.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20">
+        <div class="scroll-reveal text-center p-6 bg-[#171717]/40 border border-white/5 rounded-2xl">
+          <div class="font-geist text-3xl font-light gradient-text mb-2">94%</div>
+          <p class="text-neutral-500 text-sm">Report improved focus</p>
+        </div>
+        <div class="scroll-reveal text-center p-6 bg-[#171717]/40 border border-white/5 rounded-2xl">
+          <div class="font-geist text-3xl font-light gradient-text mb-2">87%</div>
+          <p class="text-neutral-500 text-sm">Feel mood elevation</p>
+        </div>
+        <div class="scroll-reveal text-center p-6 bg-[#171717]/40 border border-white/5 rounded-2xl">
+          <div class="font-geist text-3xl font-light gradient-text mb-2">0%</div>
+          <p class="text-neutral-500 text-sm">Habit-forming risk</p>
+        </div>
+        <div class="scroll-reveal text-center p-6 bg-[#171717]/40 border border-white/5 rounded-2xl">
+          <div class="font-geist text-3xl font-light gradient-text mb-2">30+</div>
+          <p class="text-neutral-500 text-sm">Clinical studies cited</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="py-24 relative border-y border-white/5">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-16 scroll-reveal">
+        <span class="text-xs font-bold tracking-widest uppercase text-cyan-400 mb-4 block">Community</span>
+        <h2 class="font-knewave text-4xl md:text-5xl tracking-tight mb-6">Stories From<br><span class="text-neutral-500">The Network</span></h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="scroll-reveal card-hover bg-[#171717]/60 border border-white/5 rounded-2xl p-8">
+          <div class="flex items-center gap-1 mb-4">
+            <iconify-icon icon="mdi:star" width="16" class="text-amber-400"></iconify-icon>
+            <iconify-icon icon="mdi:star" width="16" class="text-amber-400"></iconify-icon>
+            <iconify-icon icon="mdi:star" width="16" class="text-amber-400"></iconify-icon>
+            <iconify-icon icon="mdi:star" width="16" class="text-amber-400"></iconify-icon>
+            <iconify-icon icon="mdi:star" width="16" class="text-amber-400"></iconify-icon>
+          </div>
+          <p class="text-neutral-300 text-base leading-relaxed mb-6">"I was skeptical about microdosing. After two weeks with PSY-FI, my creative blocks dissolved. I'm writing the best music of my life."</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center text-sm font-semibold">AJ</div>
+            <div><p class="text-sm font-medium">Alex J.</p><p class="text-xs text-neutral-500">Musician · Portland</p></div>
+          </div>
+        </div>
+        <div class="scroll-reveal card-hover bg-[#171717]/60 border border-white/5 rounded-2xl p-8">
+          <div class="flex items-center gap-1 mb-4">
+            <iconify-icon icon="mdi:star" width="16" class="text-amber-400"></iconify-icon>
+            <iconify-icon icon="mdi:star" width="16" class="text-amber-400"></iconify-icon>
+            <iconify-icon icon="mdi:star" width="16" class="text-amber-400"></iconify-icon>
+            <iconify-icon icon="mdi:star" width="16" class="text-amber-400"></iconify-icon>
+            <iconify-icon icon="mdi:star" width="16" class="text-amber-400"></iconify-icon>
+          </div>
+          <p class="text-neutral-300 text-base leading-relaxed mb-6">"As a startup founder, I need sharp focus every day. PSY-FI gives me a clean, subtle edge — no crash, no jitters, just clarity."</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-sm font-semibold">MR</div>
+            <div><p class="text-sm font-medium">Maya R.</p><p class="text-xs text-neutral-500">Founder · San Francisco</p></div>
+          </div>
+        </div>
+        <div class="scroll-reveal card-hover bg-[#171717]/60 border border-white/5 rounded-2xl p-8">
+          <div class="flex items-center gap-1 mb-4">
+            <iconify-icon icon="mdi:star" width="16" class="text-amber-400"></iconify-icon>
+            <iconify-icon icon="mdi:star" width="16" class="text-amber-400"></iconify-icon>
+            <iconify-icon icon="mdi:star" width="16" class="text-amber-400"></iconify-icon>
+            <iconify-icon icon="mdi:star" width="16" class="text-amber-400"></iconify-icon>
+            <iconify-icon icon="mdi:star-half-full" width="16" class="text-amber-400"></iconify-icon>
+          </div>
+          <p class="text-neutral-300 text-base leading-relaxed mb-6">"I've struggled with anxiety for years. Microdosing with PSY-FI has been the gentlest, most effective tool I've found. Truly life-changing."</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-sm font-semibold">TK</div>
+            <div><p class="text-sm font-medium">Tom K.</p><p class="text-xs text-neutral-500">Therapist · Austin</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="py-24 relative">
+    <div class="max-w-3xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-16 scroll-reveal">
+        <span class="text-xs font-bold tracking-widest uppercase text-orange-400 mb-4 block">FAQ</span>
+        <h2 class="font-knewave text-4xl md:text-5xl tracking-tight mb-6">Common<br><span class="text-neutral-500">Questions</span></h2>
+      </div>
+
+      <div class="space-y-4">
+        <div class="scroll-reveal faq-item bg-[#171717]/60 border border-white/5 rounded-2xl overflow-hidden">
+          <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-8 py-6 text-left">
+            <span class="font-nerko text-2xl">Will I hallucinate from microdosing?</span>
+            <iconify-icon icon="mdi:chevron-down" width="20" class="text-neutral-400 faq-chevron shrink-0"></iconify-icon>
+          </button>
+          <div class="faq-answer px-8 pb-6">
+            <p class="text-neutral-400 text-base leading-relaxed">No. Microdosing uses sub-perceptual amounts — typically 1/10th to 1/20th of a recreational dose. You won't see visuals or experience altered perception. Most people report feeling simply "clearer" and more present.</p>
+          </div>
+        </div>
+        <div class="scroll-reveal faq-item bg-[#171717]/60 border border-white/5 rounded-2xl overflow-hidden">
+          <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-8 py-6 text-left">
+            <span class="font-nerko text-2xl">How often should I take PSY-FI?</span>
+            <iconify-icon icon="mdi:chevron-down" width="20" class="text-neutral-400 faq-chevron shrink-0"></iconify-icon>
+          </button>
+          <div class="faq-answer px-8 pb-6">
+            <p class="text-neutral-400 text-base leading-relaxed">We recommend the Fadiman Protocol: one dose every 3rd day (e.g., Monday, Thursday, Sunday). This gives your receptors time to reset and prevents tolerance buildup.</p>
+          </div>
+        </div>
+        <div class="scroll-reveal faq-item bg-[#171717]/60 border border-white/5 rounded-2xl overflow-hidden">
+          <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-8 py-6 text-left">
+            <span class="font-nerko text-2xl">Legal and Safety</span>
+            <iconify-icon icon="mdi:chevron-down" width="20" class="text-neutral-400 faq-chevron shrink-0"></iconify-icon>
+          </button>
+          <div class="faq-answer px-8 pb-6">
+            <p class="text-neutral-400 text-base leading-relaxed">Legal status varies by jurisdiction. PSY-FI ships to regions where microdosing is legally permitted. We continuously monitor regulations and will expand availability as laws evolve. Check your local laws before ordering.</p>
+          </div>
+        </div>
+        <div class="scroll-reveal faq-item bg-[#171717]/60 border border-white/5 rounded-2xl overflow-hidden">
+          <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-8 py-6 text-left">
+            <span class="font-nerko text-2xl">Can I take PSY-FI with other supplements?</span>
+            <iconify-icon icon="mdi:chevron-down" width="20" class="text-neutral-400 faq-chevron shrink-0"></iconify-icon>
+          </button>
+          <div class="faq-answer px-8 pb-6">
+            <p class="text-neutral-400 text-base leading-relaxed">PSY-FI pairs well with most supplements, especially Lion's Mane, omega-3s, and L-theanine. However, avoid combining with SSRIs or MAOIs without consulting your healthcare provider first.</p>
+          </div>
+        </div>
+        <div class="scroll-reveal faq-item bg-[#171717]/60 border border-white/5 rounded-2xl overflow-hidden">
+          <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-8 py-6 text-left">
+            <span class="font-nerko text-2xl">What if it doesn't work for me?</span>
+            <iconify-icon icon="mdi:chevron-down" width="20" class="text-neutral-400 faq-chevron shrink-0"></iconify-icon>
+          </button>
+          <div class="faq-answer px-8 pb-6">
+            <p class="text-neutral-400 text-base leading-relaxed">We offer a 30-day money-back guarantee. Microdosing is subtle — give it at least two weeks on a consistent protocol. If you're not satisfied, reach out and we'll make it right.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-24 relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full" style="filter:blur(150px);"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-purple-500/5 rounded-full" style="filter:blur(120px);"></div>
+    </div>
+    <div class="max-w-3xl mx-auto px-6 lg:px-8 text-center relative z-10 scroll-reveal">
+      <div class="mx-auto mb-8 max-w-[160px]">
+        <img src="https://pub-2efa7a216cba4710b08ac84f7595e2ff.r2.dev/New%20Project%20(1).png" alt="PSY-FI product preview" class="w-full h-auto rounded-3xl shadow-2xl" />
+      </div>
+      <h2 class="font-knewave text-4xl md:text-6xl tracking-tight mb-6">Ready to<br><span class="gradient-text font-nerko">Expand?</span></h2>
+      <p class="text-lg text-neutral-400 max-w-xl mx-auto leading-relaxed mb-10">Join 2,400+ people who've already claimed early access. Limited launch inventory available.</p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <button onclick="showToast('Welcome to PSY-FI! You are on the list.')" class="glow-btn rounded-full px-10 py-4 text-lg font-medium text-white hover:scale-105 transition-transform duration-200 active:scale-95">Get Early Access</button>
+        <a href="#product" class="text-neutral-400 hover:text-white text-base font-medium transition-colors duration-200 underline underline-offset-4 decoration-neutral-700 hover:decoration-white">View pricing</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-white/5 py-16" style="background:rgba(23,23,23,0.3);">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+        <div>
+          <a href="#" class="flex items-center gap-2 mb-4">
+            <img src="https://z-cdn-media.chatglm.cn/files/bca6d2d1-0a8f-40f7-ad3e-d00894a597d7.png?auth_key=1879125189-f2c9c18eca664e96bc0b6226c2cba93c-0-3036c8fed5dc05dd5a16d737ed0a5f6b" alt="PSY-FI Logo" class="logo-img-footer"/>
+            <span style="font-family: 'Knewave', cursive;" class="font-semibold text-2xl tracking-wide">PSY-FI</span>
+          </a>
+          <p class="text-neutral-500 text-sm leading-relaxed">Precision-crafted microdose gummies for the modern mind.</p>
+        </div>
+        <div>
+          <h4 class="font-nerko text-sm mb-4 text-neutral-300">Product</h4>
+          <ul class="space-y-2">
+            <li><a href="#benefits" class="text-neutral-500 hover:text-white text-sm transition-colors duration-200">Benefits</a></li>
+            <li><a href="#science" class="text-neutral-500 hover:text-white text-sm transition-colors duration-200">Science</a></li>
+            <li><a href="#product" class="text-neutral-500 hover:text-white text-sm transition-colors duration-200">Pricing</a></li>
+            <li><a href="#faq" class="text-neutral-500 hover:text-white text-sm transition-colors duration-200">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-nerko text-sm mb-4 text-neutral-300">Company</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-neutral-500 hover:text-white text-sm transition-colors duration-200">About</a></li>
+            <li><a href="#" class="text-neutral-500 hover:text-white text-sm transition-colors duration-200">Lab Results</a></li>
+            <li><a href="#" class="text-neutral-500 hover:text-white text-sm transition-colors duration-200">Blog</a></li>
+            <li><a href="#" class="text-neutral-500 hover:text-white text-sm transition-colors duration-200">Careers</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-nerko text-sm mb-4 text-neutral-300">Connect</h4>
+          <div class="flex items-center gap-3 mb-4">
+            <a href="#" class="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:border-white/20 transition-colors"><iconify-icon icon="mdi:twitter" width="16" class="text-neutral-400"></iconify-icon></a>
+            <a href="#" class="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:border-white/20 transition-colors"><iconify-icon icon="mdi:instagram" width="16" class="text-neutral-400"></iconify-icon></a>
+            <a href="#" class="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:border-white/20 transition-colors"><iconify-icon icon="mdi:discord" width="16" class="text-neutral-400"></iconify-icon></a>
+          </div>
+          <p class="text-neutral-500 text-xs">hello@psy-fi.co</p>
+        </div>
+      </div>
+      <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+        <p class="text-neutral-600 text-xs">&copy; 2025 PSY-FI. All rights reserved.</p>
+        <div class="flex items-center gap-6">
+          <a href="#" class="text-neutral-600 hover:text-neutral-400 text-xs transition-colors">Privacy</a>
+          <a href="#" class="text-neutral-600 hover:text-neutral-400 text-xs transition-colors">Terms</a>
+          <a href="#" class="text-neutral-600 hover:text-neutral-400 text-xs transition-colors">Disclaimer</a>
+        </div>
+      </div>
+      <p class="text-neutral-700 text-[10px] mt-6 text-center">These statements have not been evaluated by the FDA. This product is not intended to diagnose, treat, cure, or prevent any disease.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Toast
+    function showToast(msg) {
+      var toast = document.getElementById('toast');
+      var toastMsg = document.getElementById('toast-msg');
+      toastMsg.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(function() {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Scroll reveal with IntersectionObserver + fallback
+    (function() {
+      var revealed = false;
+
+      function revealAll() {
+        if (revealed) return;
+        revealed = true;
+        document.querySelectorAll('.scroll-reveal').forEach(function(el) {
+          el.classList.add('visible');
+        });
+      }
+
+      function initObserver() {
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        }, { threshold: 0.05, rootMargin: '0px 0px -2% 0px' });
+
+        document.querySelectorAll('.scroll-reveal').forEach(function(el) {
+          observer.observe(el);
+        });
+      }
+
+      // Start observer when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initObserver);
+      } else {
+        initObserver();
+      }
+
+      // Fallback: force-reveal everything after 2.5s no matter what
+      setTimeout(revealAll, 2500);
+    })();
+
+    // FAQ toggle
+    function toggleFaq(btn) {
+      var item = btn.closest('.faq-item');
+      var wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(i) {
+        i.classList.remove('open');
+      });
+      if (!wasOpen) {
+        item.classList.add('open');
+      }
+    }
+
+    // Smooth scroll with offset for fixed nav
+    document.addEventListener('click', function(e) {
+      var link = e.target.closest('a[href^="#"]');
+      if (!link) return;
+      var targetId = link.getAttribute('href');
+      if (targetId === '#') return;
+      var target = document.querySelector(targetId);
+      if (target) {
+        e.preventDefault();
+        var offset = 100;
+        var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    });
+  </script>
+
+</body>
+</html>
