@@ -222,6 +222,42 @@
       width: 100%;
       height: auto;
       display: block;
+      max-height: 22rem;
+    }
+    .video-control {
+      position: absolute;
+      bottom: 18px;
+      right: 18px;
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.42);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      z-index: 10;
+    }
+    .video-control:hover {
+      transform: scale(1.04);
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .video-control iconify-icon {
+      color: #fff;
+    }
+
+    .video-frame::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));
+      mix-blend-mode: normal;
     }
 
     .faq-answer {
@@ -647,12 +683,15 @@
         <h2 class="font-highcruiser text-4xl md:text-5xl tracking-tight mb-4">Small Dose.<br><span class="gradient-text font-highcruiser">Big Shift.</span></h2>
         <p class="text-lg text-neutral-400 max-w-2xl mx-auto leading-relaxed">See the launch story in motion with a short branded clip.</p>
       </div>
-      <div class="scroll-reveal mx-auto max-w-4xl">
+      <div class="scroll-reveal mx-auto max-w-[30rem] md:max-w-[36rem]">
         <div class="video-frame">
-          <video autoplay muted loop playsinline controls poster="./smalldosebigshift.png">
+          <video id="heroVideo" muted playsinline loop poster="./smalldosebigshift.png">
             <source src="./smalldosebigshift.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
+          <button id="videoMuteBtn" class="video-control" type="button" aria-label="Toggle volume">
+            <iconify-icon icon="mdi:volume-off" width="20"></iconify-icon>
+          </button>
         </div>
       </div>
     </div>
@@ -1009,6 +1048,40 @@
       window.addEventListener('touchmove', onScroll, { passive: true });
     })();
 
+    (function(){
+      var video = document.getElementById('heroVideo');
+      var button = document.getElementById('videoMuteBtn');
+      if (!video || !button) return;
+
+      function updateButton() {
+        var icon = video.muted ? 'mdi:volume-off' : 'mdi:volume-high';
+        button.innerHTML = '<iconify-icon icon="' + icon + '" width="20"></iconify-icon>';
+      }
+
+      button.addEventListener('click', function() {
+        video.muted = !video.muted;
+        updateButton();
+      });
+
+      function playOnMobile() {
+        if (window.matchMedia('(max-width: 767px)').matches) {
+          video.muted = true;
+          var playPromise = video.play();
+          if (playPromise && playPromise.catch) {
+            playPromise.catch(function() {});
+          }
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', playOnMobile);
+      } else {
+        playOnMobile();
+      }
+
+      window.addEventListener('resize', playOnMobile);
+      updateButton();
+    })();
   </script>
 
   <style>
