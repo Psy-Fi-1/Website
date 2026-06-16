@@ -916,6 +916,60 @@
       modal.addEventListener('click', function(e){ if(e.target===modal) closeModal(); });
       document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
     })();
+
+    // Jiggle items on mobile according to scroll velocity
+    (function(){
+      if (!window.matchMedia('(max-width: 767px)').matches) return;
+      var items = Array.from(document.querySelectorAll('#merch-accordion .accordion-item'));
+      if (!items.length) return;
+      var lastY = window.pageYOffset || document.documentElement.scrollTop;
+      var lastT = performance.now();
+      var targets = items.map(function(){ return 0; });
+      var currents = items.map(function(){ return 0; });
+      var rafId = null;
+
+      function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+
+      function onScroll(){
+        var now = performance.now();
+        var y = window.pageYOffset || document.documentElement.scrollTop;
+        var dy = y - lastY;
+        var dt = Math.max(16, now - lastT);
+        var vel = dy / dt; // px per ms
+        lastY = y; lastT = now;
+
+        // map velocity to intensity
+        var intensity = clamp(vel * 1200, -24, 24);
+
+        var mid = (items.length - 1) / 2;
+        items.forEach(function(el, i){
+          var idxFactor = (i - mid) / (mid || 1);
+          targets[i] = clamp(intensity * (0.35 + Math.abs(idxFactor)*0.65) * (idxFactor>=0?1:-1), -28, 28);
+        });
+
+        if (!rafId) loop();
+      }
+
+      function loop(){
+        var moving = false;
+        for(var i=0;i<items.length;i++){
+          currents[i] += (targets[i] - currents[i]) * 0.14;
+          targets[i] *= 0.92;
+          var t = currents[i];
+          if (Math.abs(t) > 0.01) moving = true;
+          items[i].style.transform = 'translateY('+ (t) +'px) rotate(' + (t*0.15) + 'deg)';
+        }
+        if (moving) {
+          rafId = requestAnimationFrame(loop);
+        } else {
+          rafId = null;
+        }
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('touchmove', onScroll, { passive: true });
+    })();
+
   </script>
 
   <style>
