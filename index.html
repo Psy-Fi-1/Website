@@ -210,6 +210,19 @@
       pointer-events: none;
       z-index: 2;
     }
+    .video-frame {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1.75rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+      background: #020202;
+    }
+    .video-frame video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
 
     .faq-answer {
       max-height: 0;
@@ -251,6 +264,13 @@
     }
     @media (max-width: 768px) {
       .accordion-item.active { flex: 1.8; }
+    }
+    @media (max-width: 767px) {
+      .hero-contrast p,
+      .hero-contrast .text-neutral-400,
+      .hero-contrast a:not(.glow-btn) {
+        color: #ffffff !important;
+      }
     }
     /* Fullscreen image modal for merch gallery */
     .img-modal {
@@ -614,6 +634,25 @@
             <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-sm font-semibold">TK</div>
             <div><p class="text-sm font-medium">Tom K.</p><p class="text-xs text-neutral-500">Therapist · Austin</p></div>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEO -->
+  <section class="py-24 relative">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-10 scroll-reveal">
+        <span class="text-xs font-bold tracking-widest uppercase text-cyan-400 mb-4 block">Watch</span>
+        <h2 class="font-highcruiser text-4xl md:text-5xl tracking-tight mb-4">Small Dose.<br><span class="gradient-text font-highcruiser">Big Shift.</span></h2>
+        <p class="text-lg text-neutral-400 max-w-2xl mx-auto leading-relaxed">See the launch story in motion with a short branded clip.</p>
+      </div>
+      <div class="scroll-reveal mx-auto max-w-4xl">
+        <div class="video-frame">
+          <video autoplay muted loop playsinline controls poster="./smalldosebigshift.png">
+            <source src="./smalldosebigshift.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
         </div>
       </div>
     </div>
