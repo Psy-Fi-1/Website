@@ -222,7 +222,7 @@
       width: 100%;
       height: auto;
       display: block;
-      max-height: 22rem;
+      max-height: none;
     }
     .video-control {
       position: absolute;
@@ -683,9 +683,9 @@
         <h2 class="font-highcruiser text-4xl md:text-5xl tracking-tight mb-4">Small Dose.<br><span class="gradient-text font-highcruiser">Big Shift.</span></h2>
         <p class="text-lg text-neutral-400 max-w-2xl mx-auto leading-relaxed">See the launch story in motion with a short branded clip.</p>
       </div>
-      <div class="scroll-reveal mx-auto max-w-[30rem] md:max-w-[36rem]">
+      <div class="scroll-reveal mx-auto w-full max-w-full md:max-w-[32rem] lg:max-w-[36rem]">
         <div class="video-frame">
-          <video id="heroVideo" muted playsinline loop poster="./smalldosebigshift.png">
+          <video id="heroVideo" autoplay muted playsinline loop poster="./smalldosebigshift.png">
             <source src="./smalldosebigshift.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
@@ -1063,23 +1063,21 @@
         updateButton();
       });
 
-      function playOnMobile() {
-        if (window.matchMedia('(max-width: 767px)').matches) {
-          video.muted = true;
-          var playPromise = video.play();
-          if (playPromise && playPromise.catch) {
-            playPromise.catch(function() {});
-          }
+      function handleAutoplay() {
+        video.muted = true;
+        var playPromise = video.play();
+        if (playPromise && playPromise.catch) {
+          playPromise.catch(function() {});
         }
       }
 
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', playOnMobile);
+        document.addEventListener('DOMContentLoaded', handleAutoplay);
       } else {
-        playOnMobile();
+        handleAutoplay();
       }
 
-      window.addEventListener('resize', playOnMobile);
+      window.addEventListener('resize', handleAutoplay);
       updateButton();
     })();
   </script>
