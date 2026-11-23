@@ -213,14 +213,15 @@
     .video-frame {
       position: relative;
       overflow: hidden;
+      aspect-ratio: 9 / 16;
       border-radius: 1.75rem;
       border: 1px solid rgba(255,255,255,0.1);
       box-shadow: 0 30px 80px rgba(0,0,0,0.35);
       background: #020202;
     }
-    .video-frame video {
+    .video-frame iframe, .video-frame video {
       width: 100%;
-      height: auto;
+      height: 100%;
       display: block;
       max-height: none;
     }
@@ -551,12 +552,7 @@
           </div>
 
           <div class="scroll-reveal pt-4">
-            <div class="flex items-end gap-3 mb-2">
-              <span class="font-geist text-4xl font-light">$49</span>
-              <span class="text-neutral-500 text-sm line-through mb-1">$69</span>
-              <span class="bg-cyan-500/10 text-cyan-400 text-xs font-bold px-2 py-1 rounded-full mb-1.5">LAUNCH PRICE</span>
-            </div>
-            <p class="text-neutral-500 text-sm mb-6">Free shipping · Cancel anytime · 30-day guarantee</p>
+            <p class="text-neutral-500 text-sm mb-6">30-day supply · Lab-tested · Vegan</p>
             <button onclick="showToast('Added to cart! We will confirm your order via email.')" class="glow-btn rounded-full px-8 py-4 text-base font-medium text-white hover:scale-105 transition-transform duration-200 active:scale-95">Order Now</button>
           </div>
         </div>
@@ -685,10 +681,7 @@
       </div>
       <div class="scroll-reveal mx-auto w-full max-w-full md:max-w-[32rem] lg:max-w-[36rem]">
         <div class="video-frame">
-          <video id="heroVideo" autoplay muted playsinline loop poster="./smalldosebigshift.png">
-            <source src="./smalldosebigshift.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
+          <div id="youtubePlayer"></div>
           <button id="videoMuteBtn" class="video-control" type="button" aria-label="Toggle volume">
             <iconify-icon icon="mdi:volume-off" width="20"></iconify-icon>
           </button>
@@ -800,7 +793,7 @@
       <p class="text-lg text-neutral-400 max-w-xl mx-auto leading-relaxed mb-10">Join 2,400+ people who've already claimed early access. Limited launch inventory available.</p>
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
         <button onclick="showToast('Welcome to PSY- FI! You are on the list.')" class="glow-btn rounded-full px-10 py-4 text-lg font-medium text-white hover:scale-105 transition-transform duration-200 active:scale-95">Get Early Access</button>
-        <a href="#product" class="text-neutral-400 hover:text-white text-base font-medium transition-colors duration-200 underline underline-offset-4 decoration-neutral-700 hover:decoration-white">View pricing</a>
+        <a href="#product" class="text-neutral-400 hover:text-white text-base font-medium transition-colors duration-200 underline underline-offset-4 decoration-neutral-700 hover:decoration-white">View product</a>
       </div>
     </div>
   </section>
@@ -820,7 +813,7 @@
           <ul class="space-y-2">
             <li><a href="#benefits" class="text-neutral-500 hover:text-white text-sm transition-colors duration-200">Benefits</a></li>
             <li><a href="#science" class="text-neutral-500 hover:text-white text-sm transition-colors duration-200">Science</a></li>
-            <li><a href="#product" class="text-neutral-500 hover:text-white text-sm transition-colors duration-200">Pricing</a></li>
+            <li><a href="#product" class="text-neutral-500 hover:text-white text-sm transition-colors duration-200">Product Details</a></li>
             <li><a href="#faq" class="text-neutral-500 hover:text-white text-sm transition-colors duration-200">FAQ</a></li>
           </ul>
         </div>
@@ -1048,38 +1041,49 @@
       window.addEventListener('touchmove', onScroll, { passive: true });
     })();
 
-    (function(){
-      var video = document.getElementById('heroVideo');
-      var button = document.getElementById('videoMuteBtn');
-      if (!video || !button) return;
-
-      function updateButton() {
-        var icon = video.muted ? 'mdi:volume-off' : 'mdi:volume-high';
-        button.innerHTML = '<iconify-icon icon="' + icon + '" width="20"></iconify-icon>';
-      }
-
-      button.addEventListener('click', function() {
-        video.muted = !video.muted;
-        updateButton();
-      });
-
-      function handleAutoplay() {
-        video.muted = true;
-        var playPromise = video.play();
-        if (playPromise && playPromise.catch) {
-          playPromise.catch(function() {});
-        }
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', handleAutoplay);
-      } else {
-        handleAutoplay();
-      }
-
-      window.addEventListener('resize', handleAutoplay);
-      updateButton();
+    // Load YouTube IFrame Player API
+    (function() {
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     })();
+
+    var player;
+    window.onYouTubeIframeAPIReady = function() {
+      player = new YT.Player('youtubePlayer', {
+        height: '100%',
+        width: '100%',
+        videoId: 'D2vYC_4jAn8',
+        host: 'https://www.youtube-nocookie.com',
+        playerVars: {
+          'autoplay': 1,
+          'mute': 1,
+          'loop': 1,
+          'playlist': 'D2vYC_4jAn8', // Required for looping single videos
+          'controls': 0,
+          'rel': 0,
+          'modestbranding': 1,
+          'iv_load_policy': 3,
+          'playsinline': 1,
+          'enablejsapi': 1,
+          'origin': window.location.origin
+        },
+        events: {
+          'onReady': function(event) {
+            event.target.playVideo();
+            var button = document.getElementById('videoMuteBtn');
+            if (button) {
+              button.addEventListener('click', function() {
+                if (player.isMuted()) { player.unMute(); } else { player.mute(); }
+                var icon = player.isMuted() ? 'mdi:volume-off' : 'mdi:volume-high';
+                button.innerHTML = '<iconify-icon icon="' + icon + '" width="20"></iconify-icon>';
+              });
+            }
+          }
+        }
+      });
+    };
   </script>
 
   <style>
